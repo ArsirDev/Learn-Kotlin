@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_input_materi"
+        android:icon="@drawable/ic_materi"
+        android:title="@string/title_input_materi" />
+
+    <item
+        android:id="@+id/navigation_input_kuis"
+        android:icon="@drawable/ic_quiz"
+        android:title="@string/title_input_kuis" />
+
+</menu>

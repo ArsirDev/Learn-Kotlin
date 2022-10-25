@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_materi">
+
+    <fragment
+        android:id="@+id/navigation_materi"
+        android:name="com.example.learnkotlin.presentation.home.ui.materi.fragment.MateriFragment"
+        android:label="@string/title_materi"
+        tools:layout="@layout/fragment_materi" />
+
+    <fragment
+        android:id="@+id/navigation_kuis"
+        android:name="com.example.learnkotlin.presentation.home.ui.kuis.fragment.KuisFragment"
+        android:label="@string/title_kuis"
+        tools:layout="@layout/fragment_kuis" />
+
+    <fragment
+        android:id="@+id/navigation_information"
+        android:name="com.example.learnkotlin.presentation.home.ui.information.InformationFragment"
+        android:label="@string/title_information"
+        tools:layout="@layout/fragment_information" />
+
+    <fragment
+        android:id="@+id/navigation_petunjuk"
+        android:name="com.example.learnkotlin.presentation.home.ui.petunjuk.PetunjukFragment"
+        android:label="@string/title_petunjuk"
+        tools:layout="@layout/fragment_petunjuk" />
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.learnkotlin.presentation.home.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

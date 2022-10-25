@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".presentation.home.ui.information.InformationFragment">
+
+    <LinearLayout
+        android:id="@+id/ly_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="8dp"
+        android:background="@color/dark"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Information"
+            android:textSize="17sp"
+            android:fontFamily="@font/source_sans_pro_bold"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        app:srcCompat="@drawable/ic_setting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ly_toolbar" />
+
+    <TextView
+        android:id="@+id/tv_title_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Perancangan Aplikasi"
+        android:textColor="@color/dark"
+        android:layout_marginTop="24dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image" />
+
+    <TextView
+        android:id="@+id/tv_title_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Media Pembelajaran Kotlin"
+        android:textColor="@color/dark"
+        android:layout_marginTop="4dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_two" />
+
+    <TextView
+        android:id="@+id/tv_title_four"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Berbasis Android"
+        android:textColor="@color/dark"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_three" />
+
+    <TextView
+        android:id="@+id/tv_title_six"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Dibuat Oleh"
+        android:layout_marginTop="32dp"
+        android:textSize="12sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_four" />
+
+    <TextView
+        android:id="@+id/tv_title_seven"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro_bold"
+        android:text="Alda Tri Rizky"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_six" />
+
+    <TextView
+        android:id="@+id/tv_title_eight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="1812000117"
+        android:layout_marginTop="4dp"
+        android:textSize="13sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_seven" />
+
+    <TextView
+        android:id="@+id/tv_title_program_studi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Program Studi Informatika"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_eight" />
+
+    <TextView
+        android:id="@+id/tv_title_fakultas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Fakultas Teknik dan ilmu komputer"
+        android:layout_marginTop="4dp"
+        android:textSize="13sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_program_studi" />
+
+    <TextView
+        android:id="@+id/tv_title_universitas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Universitas Potensi Utama"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:textColor="@color/dark"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_fakultas" />
+</androidx.constraintlayout.widget.ConstraintLayout>

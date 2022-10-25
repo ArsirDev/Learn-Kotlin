@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="CustomEditText">
+        <item name="android:background">@drawable/custom_edit_text</item>
+        <item name="android:fontFamily">@font/source_sans_pro</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingStart">11dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingEnd">30dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textColor">@drawable/custom_text_color</item>
+    </style>
+
+    <style name="customeCornerCycler">
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>
