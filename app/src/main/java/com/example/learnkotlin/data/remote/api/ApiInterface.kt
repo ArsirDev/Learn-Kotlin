@@ -1,16 +1,6 @@
 package com.example.learnkotlin.data.remote.api
 
-import com.example.learnkotlin.data.remote.dto.DeleteResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetInputKuisByIdResponse
-import com.example.learnkotlin.data.remote.dto.GetInputMateriByIdResponse
-import com.example.learnkotlin.data.remote.dto.LoginResponse
-import com.example.learnkotlin.data.remote.dto.RegisterResponse
-import com.example.learnkotlin.data.remote.dto.SetInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.SetInputMateriResponse
+import com.example.learnkotlin.data.remote.dto.*
 import com.example.learnkotlin.util.EndPoint.DELETE_KUIS
 import com.example.learnkotlin.util.EndPoint.DELETE_MATERI
 import com.example.learnkotlin.util.EndPoint.GET_ALL_INPUT_KUIS
@@ -23,6 +13,8 @@ import com.example.learnkotlin.util.EndPoint.LOGIN
 import com.example.learnkotlin.util.EndPoint.REGISTER
 import com.example.learnkotlin.util.EndPoint.SET_INPUT_KUIS
 import com.example.learnkotlin.util.EndPoint.SET_INPUT_MATERI
+import com.example.learnkotlin.util.EndPoint.SET_UPDATE_KUIS
+import com.example.learnkotlin.util.EndPoint.SET_UPDATE_MATERI
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -64,6 +56,16 @@ interface ApiInterface {
         @Part file: MultipartBody.Part,
     ): Response<SetInputMateriResponse>
 
+    @Multipart
+    @POST(SET_UPDATE_MATERI)
+    suspend fun setUpdateMateri(
+        @Part("id") id: Int,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("another_description") another_description: RequestBody,
+        @Part file: MultipartBody.Part,
+    ): Response<GeneralResponse>
+
     @GET(DELETE_MATERI)
     suspend fun getDeleteMateri(
         @Query("id") Id: Int
@@ -92,6 +94,20 @@ interface ApiInterface {
         @Part("correct_answer") correct_answer: RequestBody,
         @Part file: MultipartBody.Part,
     ): Response<SetInputKuisResponse>
+
+    @Multipart
+    @POST(SET_UPDATE_KUIS)
+    suspend fun setUpdateKuis(
+        @Part("id") id: Int,
+        @Part("title") title: RequestBody,
+        @Part("question") question: RequestBody,
+        @Part("answer_a") answer_a: RequestBody,
+        @Part("answer_b") answer_b: RequestBody,
+        @Part("answer_c") answer_c: RequestBody,
+        @Part("answer_d") answer_d: RequestBody,
+        @Part("correct_answer") correct_answer: RequestBody,
+        @Part file: MultipartBody.Part,
+    ): Response<GeneralResponse>
 
     @GET(GET_DETAIL_INPUT_KUIS)
     suspend fun getDetailInputKuis(

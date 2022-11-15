@@ -1,17 +1,7 @@
 package com.example.learnkotlin.data.repository
 
 import com.example.learnkotlin.data.remote.api.ApiInterface
-import com.example.learnkotlin.data.remote.dto.DeleteResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetInputKuisByIdResponse
-import com.example.learnkotlin.data.remote.dto.GetInputMateriByIdResponse
-import com.example.learnkotlin.data.remote.dto.LoginResponse
-import com.example.learnkotlin.data.remote.dto.RegisterResponse
-import com.example.learnkotlin.data.remote.dto.SetInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.SetInputMateriResponse
+import com.example.learnkotlin.data.remote.dto.*
 import com.example.learnkotlin.domain.repository.AppsRepository
 import com.example.learnkotlin.util.ResponseHandler
 import com.example.learnkotlin.util.Result
@@ -60,7 +50,7 @@ class AppsRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun setInputMater(
+    override suspend fun setInputMateri(
         title: String,
         description: String,
         another_description: String,
@@ -76,6 +66,28 @@ class AppsRepositoryImpl @Inject constructor(
             titleRequest,
             descriptionRequest,
             another_descriptionRequest,
+            multipartBody
+        )
+    }
+
+    override suspend fun setUpdateMateri(
+        id: Int,
+        title: String,
+        description: String,
+        another_description: String,
+        image: File
+    ): Result<GeneralResponse> = responseHandler.handleResponse {
+        val requestBody = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val multipartBody = MultipartBody.Part.createFormData("image", image.name, requestBody)
+        val titleRequest = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val descriptionRequest = description.toRequestBody("text/plain".toMediaTypeOrNull())
+        val anotherDescriptionRequest = another_description.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        apiService.setUpdateMateri(
+            id,
+            titleRequest,
+            descriptionRequest,
+            anotherDescriptionRequest,
             multipartBody
         )
     }
@@ -117,6 +129,41 @@ class AppsRepositoryImpl @Inject constructor(
         val answer_dRequest = answer_d.toRequestBody("text/plain".toMediaTypeOrNull())
         val correct_answerRequest = correct_answer.toRequestBody("text/plain".toMediaTypeOrNull())
         apiService.setInputKuis(
+            titleRequest,
+            questionRequest,
+            answer_aRequest,
+            answer_bRequest,
+            answer_cRequest,
+            answer_dRequest,
+            correct_answerRequest,
+            multipartBody
+        )
+    }
+
+    override suspend fun setUpdateKuis(
+        id: Int,
+        title: String,
+        question: String,
+        answer_a: String,
+        answer_b: String,
+        answer_c: String,
+        answer_d: String,
+        correct_answer: String,
+        image: File
+    ): Result<GeneralResponse> = responseHandler.handleResponse {
+        val requestBody = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val multipartBody = MultipartBody.Part.createFormData("image", image.name, requestBody)
+
+        val titleRequest = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val questionRequest = question.toRequestBody("text/plain".toMediaTypeOrNull())
+        val answer_aRequest = answer_a.toRequestBody("text/plain".toMediaTypeOrNull())
+        val answer_bRequest = answer_b.toRequestBody("text/plain".toMediaTypeOrNull())
+        val answer_cRequest = answer_c.toRequestBody("text/plain".toMediaTypeOrNull())
+        val answer_dRequest = answer_d.toRequestBody("text/plain".toMediaTypeOrNull())
+        val correct_answerRequest = correct_answer.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        apiService.setUpdateKuis(
+            id,
             titleRequest,
             questionRequest,
             answer_aRequest,

@@ -12,11 +12,8 @@ import com.example.learnkotlin.data.remote.dto.DataDetailMateriItem
 import com.example.learnkotlin.data.remote.dto.GetDetailMateriResponse
 import com.example.learnkotlin.databinding.ActivityDetailMateriBinding
 import com.example.learnkotlin.presentation.detail.viewmodel.MateriDetailViewModel
-import com.example.learnkotlin.util.Result
+import com.example.learnkotlin.util.*
 import com.example.learnkotlin.util.SESSION.ID
-import com.example.learnkotlin.util.loadImage
-import com.example.learnkotlin.util.removeView
-import com.example.learnkotlin.util.showView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,10 +37,12 @@ class DetailMateriActivity : AppCompatActivity() {
 
     private fun initIntent() {
         intent.extras?.getInt(ID)?.let { id ->
-            viewModelMateri.fetchDetailMateri(id)
+            if (id != 0) {
+                viewModelMateri.fetchDetailMateri(id)
+                return@let
+            }
         }
     }
-
     private fun initLaunch() {
         observerDetailMateri?.let {
             viewModelMateri.getDetailMateri().observe(this, it)
@@ -73,13 +72,13 @@ class DetailMateriActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(dataDetailMateriItem: DataDetailMateriItem) {
+    private fun initView(dataItem: DataDetailMateriItem) {
         with(binding) {
-            toolbarLayout.title = dataDetailMateriItem.title ?: title
-            ivImage.loadImage(dataDetailMateriItem.image)
+            binding.toolbarLayout.title = dataItem.title
+            ivImage.loadImage(dataItem.image)
             with(contentLayout) {
-                tvFirstDescription.text = dataDetailMateriItem.description
-                tvSecondDescription.text = dataDetailMateriItem.anotherDescription
+                tvFirstDescription.text = dataItem.description
+                tvSecondDescription.text = dataItem.anotherDescription
             }
         }
     }

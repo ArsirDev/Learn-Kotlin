@@ -1,10 +1,12 @@
 package com.example.learnkotlin.presentation.home.ui.materi.adapter.inputMateriById
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.learnkotlin.data.remote.dto.DataAllInputMateriItem
 import com.example.learnkotlin.data.remote.dto.DataInputMateriByIdItem
 import com.example.learnkotlin.databinding.AdminItemLayoutBinding
 import com.example.learnkotlin.databinding.AllMateriItemLayoutBinding
@@ -37,14 +39,20 @@ class GetInputMateriByIdAdapter: RecyclerView.Adapter<GetInputMateriByIdViewHold
     override fun onBindViewHolder(holder: GetInputMateriByIdViewHolder, position: Int) {
         holder.apply {
             bind(differ.currentList[position].also { item ->
+                itemView.setOnClickListenerWithDebounce {
+                    Log.e("TAG", "onBindViewHolder: onItemView", )
+                    onItemClickListener?.let { id ->
+                        id(item.id)
+                    }
+                }
                 binding.ivDelete.setOnClickListenerWithDebounce {
                     onDeleteItemClickListener?.let { id ->
                         id(item.id)
                     }
                 }
-                binding.ivView.setOnClickListenerWithDebounce {
-                    onItemClickListener?.let { id ->
-                        id(item.id)
+                binding.ivUpdate.setOnClickListenerWithDebounce {
+                    onUpdateItemClickListener?.let { data ->
+                        data(item)
                     }
                 }
             })
@@ -65,6 +73,12 @@ class GetInputMateriByIdAdapter: RecyclerView.Adapter<GetInputMateriByIdViewHold
 
     fun setOnDeleteItemClickListener(listener: (Int) -> Unit) {
         onDeleteItemClickListener = listener
+    }
+
+    private var onUpdateItemClickListener: ((DataInputMateriByIdItem) -> Unit)? = null
+
+    fun setOnUpdateItemCLickListener(listener: (DataInputMateriByIdItem) -> Unit) {
+        onUpdateItemClickListener = listener
     }
 
     companion object {

@@ -1,20 +1,7 @@
 package com.example.learnkotlin.domain.repository
 
-import com.example.learnkotlin.data.remote.dto.DeleteResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetAllInputMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailKuisResponse
-import com.example.learnkotlin.data.remote.dto.GetDetailMateriResponse
-import com.example.learnkotlin.data.remote.dto.GetInputKuisByIdResponse
-import com.example.learnkotlin.data.remote.dto.GetInputMateriByIdResponse
-import com.example.learnkotlin.data.remote.dto.LoginResponse
-import com.example.learnkotlin.data.remote.dto.RegisterResponse
-import com.example.learnkotlin.data.remote.dto.SetInputKuisResponse
-import com.example.learnkotlin.data.remote.dto.SetInputMateriResponse
+import com.example.learnkotlin.data.remote.dto.*
 import com.example.learnkotlin.util.Result
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.http.Path
 import java.io.File
 
 interface AppsRepository {
@@ -31,12 +18,20 @@ interface AppsRepository {
         password_confirmation: String
     ): Result<RegisterResponse>
 
-    suspend fun setInputMater(
+    suspend fun setInputMateri(
         title: String,
         description: String,
         another_description: String,
         image: File
     ): Result<SetInputMateriResponse>
+
+    suspend fun setUpdateMateri(
+        id: Int,
+        title: String,
+        description: String,
+        another_description: String,
+        image: File
+    ): Result<GeneralResponse>
 
     suspend fun getDeleteMateri(
         id: Int
@@ -61,6 +56,18 @@ interface AppsRepository {
         correct_answer: String,
         image: File
     ): Result<SetInputKuisResponse>
+
+    suspend fun setUpdateKuis(
+        id: Int,
+        title: String,
+        question: String,
+        answer_a: String,
+        answer_b: String,
+        answer_c: String,
+        answer_d: String,
+        correct_answer: String,
+        image: File
+    ): Result<GeneralResponse>
 
     suspend fun getDeleteKuis(
         id: Int

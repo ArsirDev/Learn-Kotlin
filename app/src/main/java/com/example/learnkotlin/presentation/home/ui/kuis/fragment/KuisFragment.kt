@@ -12,25 +12,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.learnkotlin.data.remote.dto.DataInputKuisByIdItem
+import com.example.learnkotlin.data.remote.dto.DeleteResponse
 import com.example.learnkotlin.data.remote.dto.GetAllInputKuisResponse
 import com.example.learnkotlin.data.remote.dto.GetInputKuisByIdResponse
 import com.example.learnkotlin.databinding.FragmentKuisBinding
 import com.example.learnkotlin.presentation.detail.activity.kuis.DetailKuisActivity
-import com.example.learnkotlin.presentation.detail.activity.materi.DetailMateriActivity
 import com.example.learnkotlin.presentation.home.ui.kuis.adapter.allKuis.AllKuisAdapter
 import com.example.learnkotlin.presentation.home.ui.kuis.adapter.inputKuisById.GetInputKuisByIdAdapter
 import com.example.learnkotlin.presentation.home.ui.kuis.viewmodel.KuisViewModel
-import com.example.learnkotlin.util.AUTH_STATUS
-import com.example.learnkotlin.util.MESSAGE
-import com.example.learnkotlin.util.MarginItemDecorationVertical
-import com.example.learnkotlin.util.Result
-import com.example.learnkotlin.util.SESSION
-import com.example.learnkotlin.util.SessionManager
-import com.example.learnkotlin.util.removeView
-import com.example.learnkotlin.util.showView
-import com.example.learnkotlin.util.snackbar
+import com.example.learnkotlin.presentation.input.InputActivity
+import com.example.learnkotlin.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -96,13 +92,25 @@ class KuisFragment : Fragment() {
                         ViewCompat.setNestedScrollingEnabled(this, true)
                     }
 
+                    adapter.setOnDeleteItemClickListener { id ->
+                        viewModel.fetchDeletKuis(id)
+                    }
+
                     adapter.setOnItemClickListener { id ->
                         startActivity(
                             Intent(requireContext(), DetailKuisActivity::class.java).putExtra(
                                 SESSION.ID, id))
                     }
-                }
 
+                    adapter.setOnUpdateItemCLickListener { data ->
+                        startActivity(
+                            Intent(
+                                requireContext(),
+                                InputActivity::class.java
+                            ).putExtra(SESSION.EDITKUIS, data.toJson(DataInputKuisByIdItem::class.java))
+                        )
+                    }
+                }
                 return@let
             }
         }
@@ -115,6 +123,10 @@ class KuisFragment : Fragment() {
 
         observerGetInputKuisById?.let {
             viewModel.getInputKuisById().observe(viewLifecycleOwner, it)
+        }
+
+        observerDeleteKuis?.let {
+            viewModel.getDeleteKuis().observe(viewLifecycleOwner, it)
         }
     }
 
@@ -130,7 +142,6 @@ class KuisFragment : Fragment() {
                             is Result.Success -> {
                                 binding.pbLoading.removeView()
                                 result.data?.data?.let { item ->
-
                                     if (item.isEmpty()) {
                                         binding.emptyLayout.showView()
                                         return@launch
@@ -184,6 +195,44 @@ class KuisFragment : Fragment() {
                 }
             }
         }
+
+    private var observerDeleteKuis: Observer<Result<DeleteResponse>>? = Observer { result ->
+        lifecycleScope.launchWhenStarted {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    when(result) {
+                        is Result.Loading -> {
+                            binding.pbLoading.showView()
+                        }
+                        is Result.Success -> {
+                            binding.pbLoading.removeView()
+                            result.data?.message?.let { msg ->
+                                snackbar(binding.root, msg, MESSAGE.STATUS_SUCCESS)
+                            } ?: result.message?.let { msg ->
+                                snackbar(binding.root, msg, MESSAGE.STATUS_SUCCESS)
+                            }
+                            delay(1000)
+                            refreshCurrentFragment()
+                        }
+                        is Result.Error -> {
+                            binding.pbLoading.removeView()
+                            result.message?.let { msg ->
+                                snackbar(binding.root, msg, MESSAGE.STATUS_ERROR)
+                            } ?: result.data?.message?.let { msg ->
+                                snackbar(binding.root, msg, MESSAGE.STATUS_ERROR)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun refreshCurrentFragment() {
+        val id = findNavController().currentDestination?.id
+        this.findNavController().popBackStack(id!!, true)
+        this.findNavController().navigate(id)
+    }
 
     private fun initView() {
         sessionManager.status?.let { status ->

@@ -8,6 +8,7 @@ import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -17,18 +18,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.learnkotlin.data.remote.dto.DataInputMateriByIdItem
+import com.example.learnkotlin.data.remote.dto.GeneralResponse
 import com.example.learnkotlin.data.remote.dto.SetInputMateriResponse
 import com.example.learnkotlin.databinding.FragmentInputMateriBinding
 import com.example.learnkotlin.presentation.home.HomeActivity
+import com.example.learnkotlin.util.*
 import com.example.learnkotlin.util.MESSAGE.STATUS_ERROR
 import com.example.learnkotlin.util.MESSAGE.STATUS_SUCCESS
-import com.example.learnkotlin.util.Result
-import com.example.learnkotlin.util.getFileFromContentUri
-import com.example.learnkotlin.util.loadImage
-import com.example.learnkotlin.util.removeView
-import com.example.learnkotlin.util.setOnClickListenerWithDebounce
-import com.example.learnkotlin.util.showView
-import com.example.learnkotlin.util.snackbar
+import com.example.learnkotlin.util.SESSION.EDITMATERI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -55,6 +53,7 @@ class InputMateriFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentInputMateriBinding.inflate(layoutInflater)
+        onBack()
         return binding.root
     }
 
@@ -62,8 +61,79 @@ class InputMateriFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initCheckPermission()
         initImageActivityResultLauncher()
+        initArgument()
+        initAction()
         initLaunch()
-        initView()
+    }
+
+    private fun initAction() {
+        with(binding) {
+            cardView.setOnClickListenerWithDebounce {
+                try {
+                    imageLauncher.launch("image/*")
+                } catch (e: Exception) {
+                    initCheckPermission()
+                }
+            }
+        }
+    }
+
+    private fun onBack() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(requireContext(), HomeActivity::class.java))
+                requireActivity().finishAffinity()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    private fun initArgument() {
+        arguments?.getString(EDITMATERI)?.fromJson<DataInputMateriByIdItem>().let { dataUpdate ->
+            initUpdate(dataUpdate)
+        }
+    }
+
+    private fun initUpdate(dataUpdate: DataInputMateriByIdItem?) {
+        with(binding) {
+            if (dataUpdate != null) {
+                ivImageMateri.loadImage(dataUpdate.image)
+                etTitle.setText(dataUpdate.title)
+                etDescription.setText(dataUpdate.description)
+                etSecondDescription.setText(dataUpdate.anotherDescription)
+
+                btnSave.setOnClickListenerWithDebounce {
+                    val title = etTitle.text.toString().trim()
+                    val description = etDescription.text.toString().trim()
+                    val another_description = etSecondDescription.text.toString().trim()
+
+                    if (newImage == null) {
+                        snackbar(binding.root, "Gambar silahkan ambil ulang", STATUS_ERROR)
+                        return@setOnClickListenerWithDebounce
+                    }
+
+                    viewmodel.setUpdateMateri(
+                        dataUpdate.id,
+                        title,
+                        description,
+                        another_description,
+                        newImage!!
+                    )
+                }
+            } else {
+                btnSave.setOnClickListenerWithDebounce {
+                    val title = etTitle.text.toString().trim()
+                    val description = etDescription.text.toString().trim()
+                    val another_description = etSecondDescription.text.toString().trim()
+                    viewmodel.setInputMateri(
+                        title,
+                        description,
+                        another_description,
+                        newImage!!
+                    )
+                }
+            }
+        }
     }
 
     private fun initImageActivityResultLauncher() {
@@ -98,55 +168,48 @@ class InputMateriFragment : Fragment() {
         }
     }
 
-
-    private fun initView() {
-        with(binding) {
-            cardView.setOnClickListenerWithDebounce {
-                try {
-                    imageLauncher.launch("image/*")
-                } catch (e: Exception) {
-                    initCheckPermission()
-                }
-            }
-            btnSave.setOnClickListenerWithDebounce {
-                val title = etTitle.text.toString().trim()
-                val description = etDescription.text.toString().trim()
-                val another_description = etSecondDescription.text.toString().trim()
-                onValidation(
-                    title,
-                    description,
-                    another_description,
-                    newImage
-                )
-            }
-        }
-    }
-
-    private fun onValidation(
-        title: String,
-        description: String,
-        anotherDescription: String,
-        newImage: File?
-    ) {
-        if (title.isEmpty() || description.isEmpty() || anotherDescription.isEmpty() || newImage == null) {
-            snackbar(binding.root, "Field tidak boleh kosong", STATUS_ERROR)
-            return
-        }
-        viewmodel.setInputMateri(
-            title,
-            description,
-            anotherDescription,
-            newImage
-        )
-    }
-
     private fun initLaunch() {
-        observerInputMater.let {
+        observerInputMateri.let {
             viewmodel.getInputMateri().observe(viewLifecycleOwner, it)
         }
+        observerUpdateMateri.let {
+            viewmodel.getUpdate().observe(viewLifecycleOwner, it)
+        }
     }
 
-    private var observerInputMater: Observer<Result<SetInputMateriResponse>> = Observer { result ->
+    private var observerUpdateMateri: Observer<Result<GeneralResponse>> = Observer { result ->
+        lifecycleScope.launchWhenStarted {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    when(result) {
+                        is Result.Loading -> {
+                            binding.pbLoading.showView()
+                        }
+                        is Result.Success -> {
+                            binding.pbLoading.removeView()
+                            result.message?.let { msg ->
+                                snackbar(binding.root, msg , STATUS_SUCCESS)
+                            } ?: result.data?.message?.let { msg ->
+                                snackbar(binding.root, msg , STATUS_SUCCESS)
+                            }
+                            delay(1000)
+                            toHome()
+                        }
+                        is Result.Error -> {
+                            binding.pbLoading.removeView()
+                            result.message?.let { msg ->
+                                snackbar(binding.root, msg , STATUS_ERROR)
+                            } ?: result.data?.message?.let { msg ->
+                                snackbar(binding.root, msg , STATUS_ERROR)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var observerInputMateri: Observer<Result<SetInputMateriResponse>> = Observer { result ->
         lifecycleScope.launchWhenStarted {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {

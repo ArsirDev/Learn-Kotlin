@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.learnkotlin.data.remote.dto.DataInputKuisByIdItem
-import com.example.learnkotlin.databinding.AllMateriItemLayoutBinding
+import com.example.learnkotlin.databinding.AdminItemLayoutBinding
 import com.example.learnkotlin.util.setOnClickListenerWithDebounce
 
 class GetInputKuisByIdAdapter: RecyclerView.Adapter<GetInputKuisByIdViewHolder>() {
@@ -30,15 +30,25 @@ class GetInputKuisByIdAdapter: RecyclerView.Adapter<GetInputKuisByIdViewHolder>(
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GetInputKuisByIdViewHolder {
-        return GetInputKuisByIdViewHolder(AllMateriItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return GetInputKuisByIdViewHolder(AdminItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: GetInputKuisByIdViewHolder, position: Int) {
         holder.apply {
             bind(differ.currentList[position].also { item ->
+                binding.ivDelete.setOnClickListenerWithDebounce {
+                    onDeleteItemClickListener?.let { id ->
+                        id(item.id)
+                    }
+                }
                 itemView.setOnClickListenerWithDebounce {
                     onItemClickListener?.let { id ->
                         id(item.id)
+                    }
+                }
+                binding.ivUpdate.setOnClickListenerWithDebounce {
+                    onUpdateItemClickListener?.let { data ->
+                        data(item)
                     }
                 }
             })
@@ -53,6 +63,18 @@ class GetInputKuisByIdAdapter: RecyclerView.Adapter<GetInputKuisByIdViewHolder>(
 
     fun setOnItemClickListener(listener: (Int) -> Unit) {
         onItemClickListener = listener
+    }
+
+    private var onDeleteItemClickListener: ((Int) -> Unit)? = null
+
+    fun setOnDeleteItemClickListener(listener: (Int) -> Unit) {
+        onDeleteItemClickListener = listener
+    }
+
+    private var onUpdateItemClickListener: ((DataInputKuisByIdItem) -> Unit)? = null
+
+    fun setOnUpdateItemCLickListener(listener: (DataInputKuisByIdItem) -> Unit) {
+        onUpdateItemClickListener = listener
     }
 
     companion object {

@@ -1,22 +1,21 @@
 package com.example.learnkotlin.presentation.home.ui.materi.fragment
 
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnkotlin.R
+import com.example.learnkotlin.data.remote.dto.DataInputMateriByIdItem
 import com.example.learnkotlin.data.remote.dto.DeleteResponse
 import com.example.learnkotlin.data.remote.dto.GetAllInputMateriResponse
 import com.example.learnkotlin.data.remote.dto.GetInputMateriByIdResponse
@@ -25,20 +24,14 @@ import com.example.learnkotlin.presentation.detail.activity.materi.DetailMateriA
 import com.example.learnkotlin.presentation.home.ui.materi.adapter.allMateri.AllMateriAdapter
 import com.example.learnkotlin.presentation.home.ui.materi.adapter.inputMateriById.GetInputMateriByIdAdapter
 import com.example.learnkotlin.presentation.home.ui.materi.viewmodel.MateriViewModel
+import com.example.learnkotlin.presentation.input.InputActivity
+import com.example.learnkotlin.util.*
 import com.example.learnkotlin.util.AUTH_STATUS.ADMIN
 import com.example.learnkotlin.util.AUTH_STATUS.USER
-import com.example.learnkotlin.util.MESSAGE
 import com.example.learnkotlin.util.MESSAGE.STATUS_ERROR
 import com.example.learnkotlin.util.MESSAGE.STATUS_SUCCESS
-import com.example.learnkotlin.util.MarginItemDecorationVertical
-import com.example.learnkotlin.util.P_E_M
-import com.example.learnkotlin.util.Result
+import com.example.learnkotlin.util.SESSION.EDITMATERI
 import com.example.learnkotlin.util.SESSION.ID
-import com.example.learnkotlin.util.SessionManager
-import com.example.learnkotlin.util.removeView
-import com.example.learnkotlin.util.showView
-import com.example.learnkotlin.util.simpleName
-import com.example.learnkotlin.util.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -121,8 +114,16 @@ class MateriFragment : Fragment(R.layout.fragment_materi) {
                             ).putExtra(ID, id)
                         )
                     }
-                }
 
+                    adapter.setOnUpdateItemCLickListener { dataUpdate ->
+                        startActivity(
+                            Intent(
+                                requireContext(),
+                                InputActivity::class.java
+                            ).putExtra(EDITMATERI, dataUpdate.toJson(DataInputMateriByIdItem::class.java))
+                        )
+                    }
+                }
                 return@let
             }
         }
@@ -189,6 +190,7 @@ class MateriFragment : Fragment(R.layout.fragment_materi) {
                                 result.data?.dataItem?.let { item ->
                                     if (item.isEmpty()) {
                                         binding.emptyLayout.showView()
+                                        binding.rvMateri.removeView()
                                         return@launch
                                     }
                                     getInputMateribyIdAdapter.differ.submitList(item)
@@ -218,19 +220,19 @@ class MateriFragment : Fragment(R.layout.fragment_materi) {
                         }
                         is Result.Success -> {
                             binding.pbLoading.removeView()
-                            result.message?.let { msg ->
+                            result.data?.message?.let { msg ->
                                 snackbar(binding.root, msg, STATUS_SUCCESS)
-                            } ?: result.data?.message?.let { msg ->
+                            } ?: result.message?.let { msg ->
                                 snackbar(binding.root, msg, STATUS_SUCCESS)
                             }
                             delay(1000)
-                                parentFragmentManager.beginTransaction().attach(this@MateriFragment).commitNow()
+                            refreshCurrentFragment()
                         }
                         is Result.Error -> {
                             binding.pbLoading.removeView()
-                            result.message?.let { msg ->
+                            result.data?.message?.let { msg ->
                                 snackbar(binding.root, msg, STATUS_ERROR)
-                            } ?: result.data?.message?.let { msg ->
+                            } ?: result.message?.let { msg ->
                                 snackbar(binding.root, msg, STATUS_ERROR)
                             }
                         }
@@ -238,6 +240,12 @@ class MateriFragment : Fragment(R.layout.fragment_materi) {
                 }
             }
         }
+    }
+
+    private fun refreshCurrentFragment() {
+        val id = findNavController().currentDestination?.id
+        this.findNavController().popBackStack(id!!, true)
+        this.findNavController().navigate(id)
     }
 
     private fun initView() {
@@ -252,11 +260,6 @@ class MateriFragment : Fragment(R.layout.fragment_materi) {
                 return@let
             }
         }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentFragmentManager.beginTransaction().detach(this@MateriFragment).commitNow()
     }
 
     override fun onDestroyView() {

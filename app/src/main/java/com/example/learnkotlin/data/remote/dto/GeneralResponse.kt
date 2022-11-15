@@ -2,7 +2,7 @@ package com.example.learnkotlin.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class DeleteResponse(
+data class GeneralResponse(
 
 	@field:SerializedName("data")
 	val data: Boolean,

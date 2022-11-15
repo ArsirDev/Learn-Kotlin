@@ -34,13 +34,19 @@ import java.io.OutputStream
 import android.graphics.BitmapFactory
 
 import android.graphics.Bitmap
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 import cn.pedant.SweetAlert.SweetAlertDialog
 import cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener
+import com.example.learnkotlin.presentation.home.HomeActivity
 import com.example.learnkotlin.presentation.home.ui.kuis.fragment.KuisFragment
-
+import com.example.learnkotlin.util.SESSION.IDFRAGMENT
+import com.google.gson.Gson
+import java.lang.reflect.Type
 
 fun View.setOnClickListenerWithDebounce(debounceTime: Long = 600L, action: () -> Unit) {
     this.setOnClickListener(object : View.OnClickListener {
@@ -74,7 +80,7 @@ fun CompoundButton.convertHtml(@SuppressLint("SupportAnnotationUsage") @StringRe
     this.text = HtmlCompat.fromHtml(this.context.getString(text), HtmlCompat.FROM_HTML_MODE_LEGACY)
 }
 
-fun ImageView.loadImage(imageUrl: String, cacheStrategy: DiskCacheStrategy = DiskCacheStrategy.NONE) {
+fun ImageView.loadImage(imageUrl: String?, cacheStrategy: DiskCacheStrategy = DiskCacheStrategy.NONE) {
     GlideApp.with(this.context)
         .load(imageUrl)
         .override(480, 320)
@@ -87,7 +93,7 @@ fun ImageView.loadImage(imageUrl: String, cacheStrategy: DiskCacheStrategy = Dis
 }
 
 fun customSuccessDialog(
-    context: Context,
+    context: Context
 ) {
     SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
         .setTitleText("\uD83C\uDF89 Selamat, jawaban anda Benar!!!")
@@ -95,7 +101,7 @@ fun customSuccessDialog(
         .setConfirmText("Oke!")
         .setConfirmClickListener { sDialog ->
             sDialog.dismissWithAnimation()
-            context.startActivity(Intent(context, KuisFragment::class.java))
+            context.startActivity(Intent(context, HomeActivity::class.java))
         }
         .show()
 }
@@ -109,9 +115,29 @@ fun customFailureDialog(
         .setConfirmText("Oke!")
         .setConfirmClickListener { sDialog ->
             sDialog.dismissWithAnimation()
-            context.startActivity(Intent(context, KuisFragment::class.java))
+            context.startActivity(Intent(context, HomeActivity::class.java))
         }
         .show()
+}
+
+fun AppCompatActivity.replace(containerViewId: Int, fragment: Fragment?, bundle: Bundle? = null, addToBackstack: Boolean = false) {
+    supportFragmentManager.commit {
+        fragment?.let {
+            if (!fragment.isAdded) {
+                fragment.arguments = bundle
+                replace(containerViewId, fragment, fragment.tag)
+                if (addToBackstack) addToBackStack(fragment.tag)
+            }
+        }
+    }
+}
+
+inline fun <reified T> String.fromJson(): T {
+    return Gson().fromJson(this, T::class.java)
+}
+
+fun Any.toJson(type: Type): String {
+    return Gson().toJson(this, type)
 }
 
 class MarginItemDecorationVertical(private val spaceHeight: Int): RecyclerView.ItemDecoration() {

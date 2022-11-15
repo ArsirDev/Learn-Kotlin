@@ -8,6 +8,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.data.remote.dto.DataDetailKuisItem
 import com.example.learnkotlin.data.remote.dto.GetDetailKuisResponse
@@ -16,6 +19,7 @@ import com.example.learnkotlin.presentation.detail.viewmodel.KuisDetailViewModel
 import com.example.learnkotlin.util.MESSAGE.STATUS_ERROR
 import com.example.learnkotlin.util.Result
 import com.example.learnkotlin.util.SESSION.ID
+import com.example.learnkotlin.util.SESSION.IDFRAGMENT
 import com.example.learnkotlin.util.customFailureDialog
 import com.example.learnkotlin.util.customSuccessDialog
 import com.example.learnkotlin.util.loadImage
@@ -26,6 +30,7 @@ import com.example.learnkotlin.util.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class DetailKuisActivity : AppCompatActivity() {
@@ -64,7 +69,6 @@ class DetailKuisActivity : AppCompatActivity() {
                     when(result) {
                         is Result.Loading -> {
                             binding.contentLayout.pbLoading?.showView()
-
                         }
                         is Result.Success -> {
                             binding.contentLayout.pbLoading?.removeView()
@@ -91,7 +95,6 @@ class DetailKuisActivity : AppCompatActivity() {
                 rbB?.text = dataItem.answerB
                 rbC?.text = dataItem.answerC
                 rbD?.text = dataItem.answerD
-
                 btnAnswer?.setOnClickListenerWithDebounce {
                     val rgStatus = rgAnswer?.checkedRadioButtonId
                     onValidation(rgStatus as Int, dataItem)

@@ -5,12 +5,14 @@ object EndPoint {
     const val REGISTER = "api/learn-kotlin-register"
 
     const val SET_INPUT_MATERI = "api/learn-kotlin-set-input-materi"
+    const val SET_UPDATE_MATERI = "api/learn-kotlin-update-materi"
     const val DELETE_MATERI = "api/learn-kotlin-delete-materi"
     const val GET_DETAIL_INPUT_MATERI = "api/learn-kotlin-get-detail-materi"
     const val GET_ALL_INPUT_MATERI = "api/learn-kotlin-get-all-input-materi"
     const val GET_INPUT_MATERI_BY_ID = "api/learn-kotlin-get-input-materi-by-id"
 
     const val SET_INPUT_KUIS = "api/learn-kotlin-set-input-kuis"
+    const val SET_UPDATE_KUIS = "api/learn-kotlin-update-kuis"
     const val DELETE_KUIS = "api/learn-kotlin-delete-kuis"
     const val GET_DETAIL_INPUT_KUIS = "api/learn-kotlin-get-detail-kuis"
     const val GET_ALL_INPUT_KUIS = "api/learn-kotlin-get-all-input-kuis"
@@ -19,6 +21,9 @@ object EndPoint {
 
 object SESSION {
     const val ID = "ID"
+    const val IDFRAGMENT = "IDFRAGMENT"
+    const val EDITMATERI = "EDITMATERI"
+    const val EDITKUIS = "EDITKUIS"
     const val EMAIL = "EMAIL"
     const val NAME = "NAME"
     const val STATUS = "STATUS"

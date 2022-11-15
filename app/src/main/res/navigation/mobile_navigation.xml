@@ -9,7 +9,8 @@
         android:id="@+id/navigation_materi"
         android:name="com.example.learnkotlin.presentation.home.ui.materi.fragment.MateriFragment"
         android:label="@string/title_materi"
-        tools:layout="@layout/fragment_materi" />
+        tools:layout="@layout/fragment_materi" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_kuis"

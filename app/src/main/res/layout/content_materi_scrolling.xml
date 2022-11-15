@@ -10,7 +10,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="32dp">
 
         <TextView
             android:id="@+id/tv_first_description"
@@ -40,10 +41,25 @@
             android:text="@string/materi_second_description_text"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_first_description" />
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_corner_rounded"
+            android:fontFamily="@font/source_sans_pro_bold"
+            android:layout_marginTop="32dp"
+            android:visibility="gone"
+            android:text="Edit"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:cornerRadius="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_second_description" />
 
         <ProgressBar
             android:id="@+id/pb_loading"
