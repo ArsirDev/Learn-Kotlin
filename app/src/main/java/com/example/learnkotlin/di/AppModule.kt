@@ -8,6 +8,7 @@ import com.example.learnkotlin.domain.repository.AppsRepository
 import com.example.learnkotlin.util.AUTH.AUTH_HEADER
 import com.example.learnkotlin.util.ResponseHandler
 import com.example.learnkotlin.util.SessionManager
+import com.example.learnkotlin.util.URL.BASE_URL
 import com.example.learnkotlin.util.at
 import dagger.Module
 import dagger.Provides
@@ -54,7 +55,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
