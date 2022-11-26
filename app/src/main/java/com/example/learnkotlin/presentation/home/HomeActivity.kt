@@ -7,6 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.learnkotlin.R
 import com.example.learnkotlin.databinding.ActivityHomeBinding
+import com.example.learnkotlin.presentation.compiler.CompilerActivity
 import com.example.learnkotlin.presentation.input.InputActivity
 import com.example.learnkotlin.util.AUTH_STATUS.USER
 import com.example.learnkotlin.util.SessionManager
@@ -45,6 +46,10 @@ class HomeActivity : AppCompatActivity() {
                 binding.btnInput.removeView()
                 return@let
             }
+        }
+
+        binding.btnCompiler.setOnClickListenerWithDebounce {
+            startActivity(Intent(this, CompilerActivity::class.java))
         }
 
         binding.btnInput.setOnClickListenerWithDebounce {

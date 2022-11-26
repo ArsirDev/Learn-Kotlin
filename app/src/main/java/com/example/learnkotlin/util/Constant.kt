@@ -47,5 +47,5 @@ object AUTH_STATUS {
 }
 
 object URL {
-    const val BASE_URL = "https://45a4-2404-8000-1022-34a4-48d4-5d80-3fd6-b743.ap.ngrok.io"
+    const val BASE_URL = "https://63ae-110-232-81-154.ap.ngrok.io"
 }

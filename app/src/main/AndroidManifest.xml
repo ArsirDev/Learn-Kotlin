@@ -20,6 +20,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="r">
         <activity
+            android:name=".presentation.compiler.CompilerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".presentation.detail.activity.kuis.DetailKuisActivity"
             android:exported="false"
             android:label="@string/title_activity_detail_kuis"
